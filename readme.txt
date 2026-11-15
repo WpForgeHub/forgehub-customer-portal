@@ -1,0 +1,40 @@
+=== WPForgeHub Digital Customer Portal & Downloads for WooCommerce ===
+Contributors: wpforgehub
+Tags: woocommerce, customer portal, downloads, digital products, magic link, passwordless, license manager
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Modern, high-performance customer dashboard for WooCommerce digital products with passwordless magic link login, downloads manager, and license keys.
+
+== Description ==
+
+Transform WooCommerce's outdated default "My Account" area into a sleek, modern, high-converting **Customer Portal**. Built specifically for digital stores, software vendors, theme/plugin creators, and course creators.
+
+### ⚡ Key Features (Free Edition)
+* **Modern SaaS Portal UI:** Replaces clunky default WooCommerce tables with a responsive, high-contrast dashboard.
+* **Passwordless Magic Link Login:** Allows customers to log in with 1-click via a secure email magic link (eliminating forgotten password friction).
+* **Direct Downloads Manager:** Clean `.zip` downloads tab displaying version numbers, file sizes, and instant download buttons.
+* **Orders & Purchases History:** Clean view of customer orders and fulfillment statuses.
+* **Profile & Password Management:** Customers can easily update their name, email, and set/reset their password.
+* **Instant Post-Checkout Redirection:** Automatically routes buyers straight to their downloads upon order completion.
+
+### 🚀 Pro Features
+* **License Key Manager:** Integrates with Freemius, WooCommerce API Manager, and EDD, presenting license keys with 1-click clipboard copy.
+* **In-Portal Priority Support Desk:** Embedded support ticket form sending technical inquiries directly to your team with environment metadata.
+* **Release Changelogs & Release Notes:** Customers can view what's new in each version before downloading.
+* **Custom Brand Themes:** Match your brand's accent colors and toggle between Dark Mode and Clean White.
+
+== Installation ==
+
+1. Upload the `wpfh-customer-portal` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Configure your preferences under **WooCommerce -> Customer Portal**.
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial public release with Passwordless Magic Link Login, Modern Customer Portal tabs, and Instant Post-Checkout Download Redirection.

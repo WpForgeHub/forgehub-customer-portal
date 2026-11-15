@@ -1,0 +1,40 @@
+# Copyright (C) 2026 WPForgeHub
+# This file is distributed under the same license as the WPForgeHub Customer Portal plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WPForgeHub Digital Customer Portal & Downloads 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wpforgehub.com/support/\n"
+"POT-Creation-Date: 2026-11-15 03:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
+"Last-Translator: WPForgeHub Core Team <support@wpforgehub.com>\n"
+"Language-Team: WPForgeHub Team <support@wpforgehub.com>\n"
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Downloads (.zip)"
+msgstr ""
+
+msgid "Orders & Licenses"
+msgstr ""
+
+msgid "Profile & Password"
+msgstr ""
+
+msgid "Support Desk"
+msgstr ""
+
+msgid "Log Out"
+msgstr ""
+
+msgid "Passwordless Magic Link Login"
+msgstr ""
+
+msgid "Your Product License Key"
+msgstr ""
+
+msgid "Copy Key"
+msgstr ""
