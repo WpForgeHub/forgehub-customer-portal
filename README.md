@@ -3,7 +3,7 @@
 [![WordPress](https://img.shields.io/badge/WordPress-6.0+-blue.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4+-green.svg)](https://php.net)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2+-orange.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Release](https://img.shields.io/badge/Release-v1.0.0-purple.svg)](https://github.com/WpForgeHub/wpfh-customer-portal/releases/tag/v1.0.0)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-purple.svg)](https://github.com/WpForgeHub/wpfh-customer-portal/releases/tag/v1.1.0)
 
 Modern, high-performance customer dashboard for WooCommerce digital products. Features 1-click passwordless Magic Link login, clean Downloads (.zip) manager, license management, and instant post-checkout redirect.
 
@@ -20,9 +20,9 @@ Modern, high-performance customer dashboard for WooCommerce digital products. Fe
 - **Automated Post-Checkout Routing:** Instantly guides buyers to their files upon checkout completion.
 
 ### Pro Edition
-- **Multi-Platform License Key Manager:** Displays active license keys (Freemius, WooCommerce API Manager, EDD) with 1-click clipboard copy.
-- **Priority Support Ticket Desk:** Direct in-portal support request form capturing environment details.
-- **Changelog & Release Notes:** Allow buyers to review version release notes right inside the portal.
+- **Priority Support Ticket Desk:** Database-backed ticket management with status badges, threaded conversations, SLA prioritization, and file attachments.
+- **Domain License Delegation & Remote Deactivation:** View active website domains per license key and remotely deactivate staging/client domains in 1-click.
+- **Automated Compliant PDF Invoices:** Printable and downloadable tax invoices with EU VAT numbers, tax calculations, and license keys.
 - **Brand Customization:** Match your store's custom accent colors and dark/light themes.
 
 ---

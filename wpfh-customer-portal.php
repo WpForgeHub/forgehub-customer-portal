@@ -3,7 +3,7 @@
  * Plugin Name:       WPForgeHub Digital Customer Portal & Downloads for WooCommerce
  * Plugin URI:        https://wpforgehub.com/plugins/customer-portal/
  * Description:       Modern, high-performance customer dashboard for WooCommerce digital products. Features 1-click passwordless Magic Link login, clean Downloads (.zip) manager, license management, and instant post-checkout redirect.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            WPForgeHub
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'WPFH_CP_VERSION', '1.0.0' );
+define( 'WPFH_CP_VERSION', '1.1.0' );
 define( 'WPFH_CP_FILE', __FILE__ );
 define( 'WPFH_CP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPFH_CP_URL', plugin_dir_url( __FILE__ ) );
@@ -52,12 +52,20 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
                     ],
                 ] );
             } else {
-                // Fallback dummy object for Free distribution
+                // Fallback object for Free / Filter-based Pro distribution
                 $wpfh_cp_fs = new class {
-                    public function can_use_premium_code() { return false; }
-                    public function is__premium_only() { return false; }
-                    public function is_plan( $plan ) { return false; }
-                    public function get_upgrade_url() { return 'https://wpforgehub.com/plugins/customer-portal/#pricing'; }
+                    public function can_use_premium_code() {
+                        return (bool) apply_filters( 'fs_can_use_premium_code__wpfh-customer-portal', false );
+                    }
+                    public function is__premium_only() {
+                        return false;
+                    }
+                    public function is_plan( $plan ) {
+                        return (bool) apply_filters( 'fs_is_plan__wpfh-customer-portal', false, $plan );
+                    }
+                    public function get_upgrade_url() {
+                        return 'https://wpforgehub.com/plugins/customer-portal/#pricing';
+                    }
                 };
             }
         }
@@ -86,7 +94,7 @@ function wpfh_cp_check_woocommerce_dependency() {
 }
 
 /**
- * Initialize Plugin Core.
+ * Initialize Plugin Core & Pro Modules.
  */
 function wpfh_cp_init() {
     load_plugin_textdomain( 'wpfh-customer-portal', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -100,6 +108,28 @@ function wpfh_cp_init() {
 
     WPFH_CP_Portal::init();
     WPFH_CP_Magic_Link::init();
+
+    // Initialize Pro Features when license is active
+    if ( function_exists( 'wpfh_cp_fs' ) && wpfh_cp_fs()->can_use_premium_code() ) {
+        $pro_tickets = WPFH_CP_PATH . 'includes/pro/class-wpfh-cp-support-tickets.php';
+        $pro_domains = WPFH_CP_PATH . 'includes/pro/class-wpfh-cp-domain-licenses.php';
+        $pro_invoice = WPFH_CP_PATH . 'includes/pro/class-wpfh-cp-pdf-invoices.php';
+
+        if ( file_exists( $pro_tickets ) ) {
+            require_once $pro_tickets;
+            WPFH_CP_Support_Tickets::init();
+        }
+
+        if ( file_exists( $pro_domains ) ) {
+            require_once $pro_domains;
+            WPFH_CP_Domain_Licenses::init();
+        }
+
+        if ( file_exists( $pro_invoice ) ) {
+            require_once $pro_invoice;
+            WPFH_CP_PDF_Invoices::init();
+        }
+    }
 }
 add_action( 'plugins_loaded', 'wpfh_cp_init', 20 );
 
