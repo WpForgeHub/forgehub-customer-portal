@@ -128,6 +128,7 @@ class WPFH_CP_Support_Tickets {
                     self::handle_attachment_upload( $ticket_id, $_FILES['ticket_attachment'] );
                 }
 
+                /* translators: %d: Support ticket ID number */
                 wc_add_notice( sprintf( __( 'Support ticket #%d created successfully! Our team will respond shortly.', 'wpfh-customer-portal' ), $ticket_id ), 'success' );
                 wp_safe_redirect( wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) );
                 exit;
@@ -181,6 +182,7 @@ class WPFH_CP_Support_Tickets {
             $ticket = get_post( $ticket_id );
             if ( $ticket && ( (int) $ticket->post_author === $user_id || current_user_can( 'manage_woocommerce' ) ) ) {
                 update_post_meta( $ticket_id, '_wpfh_ticket_status', 'resolved' );
+                /* translators: %d: Support ticket ID number */
                 wc_add_notice( sprintf( __( 'Ticket #%d has been marked as resolved.', 'wpfh-customer-portal' ), $ticket_id ), 'success' );
                 wp_safe_redirect( add_query_arg( [ 'ticket_id' => $ticket_id ], wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) ) );
                 exit;

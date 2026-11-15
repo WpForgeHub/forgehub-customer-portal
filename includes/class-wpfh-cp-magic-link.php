@@ -69,8 +69,10 @@ class WPFH_CP_Magic_Link {
             'wpfh_magic_token' => $token,
         ], wc_get_page_permalink( 'myaccount' ) );
 
+        /* translators: %s: Site title / blog name */
         $subject = sprintf( __( '✨ Your 1-Click Login Link for %s', 'wpfh-customer-portal' ), get_bloginfo( 'name' ) );
         $message = sprintf(
+            /* translators: 1: User display name, 2: Magic login URL, 3: Site title */
             __( "Hello %s,\n\nClick the secure link below to sign in instantly to your Customer Portal without a password:\n\n%s\n\nThis single-use link will expire in 15 minutes.\n\nWarm regards,\n%s", 'wpfh-customer-portal' ),
             $user->display_name,
             $login_url,

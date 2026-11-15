@@ -3,7 +3,7 @@
  * Plugin Name:       WPForgeHub Digital Customer Portal & Downloads for WooCommerce
  * Plugin URI:        https://wpforgehub.com/plugins/customer-portal/
  * Description:       Modern, high-performance customer dashboard for WooCommerce digital products. Features 1-click passwordless Magic Link login, clean Downloads (.zip) manager, license management, and instant post-checkout redirect.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            WPForgeHub
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'WPFH_CP_VERSION', '1.1.0' );
+define( 'WPFH_CP_VERSION', '1.1.1' );
 define( 'WPFH_CP_FILE', __FILE__ );
 define( 'WPFH_CP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPFH_CP_URL', plugin_dir_url( __FILE__ ) );
@@ -55,12 +55,14 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
                 // Fallback object for Free / Filter-based Pro distribution
                 $wpfh_cp_fs = new class {
                     public function can_use_premium_code() {
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                         return (bool) apply_filters( 'fs_can_use_premium_code__wpfh-customer-portal', false );
                     }
                     public function is__premium_only() {
                         return false;
                     }
                     public function is_plan( $plan ) {
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                         return (bool) apply_filters( 'fs_is_plan__wpfh-customer-portal', false, $plan );
                     }
                     public function get_upgrade_url() {
@@ -97,7 +99,7 @@ function wpfh_cp_check_woocommerce_dependency() {
  * Initialize Plugin Core & Pro Modules.
  */
 function wpfh_cp_init() {
-    load_plugin_textdomain( 'wpfh-customer-portal', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+    // Note: load_plugin_textdomain is intentionally omitted as WordPress.org automatically loads translations since WP 4.6.
 
     if ( ! wpfh_cp_check_woocommerce_dependency() ) {
         return;

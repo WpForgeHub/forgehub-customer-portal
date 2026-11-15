@@ -65,7 +65,10 @@ class WPFH_CP_Domain_Licenses {
                 </div>
                 <div style="text-align:right;">
                     <span style="background:#1e293b; color:#38bdf8; padding:6px 12px; border-radius:6px; font-weight:700; font-size:13px;">
-                        <?php printf( esc_html__( '%d / %d Seats Used', 'wpfh-customer-portal' ), $active_count, $max_activations ); ?>
+                        <?php
+                        /* translators: 1: Active domain activations count, 2: Maximum activations limit */
+                        printf( esc_html__( '%1$d / %2$d Seats Used', 'wpfh-customer-portal' ), $active_count, $max_activations );
+                        ?>
                     </span>
                 </div>
             </div>
@@ -234,6 +237,7 @@ class WPFH_CP_Domain_Licenses {
         $max_activations = absint( $order->get_meta( '_wpfh_license_quota' ) ?: 5 );
 
         if ( count( $domains ) >= $max_activations ) {
+            /* translators: %d: Maximum license activation quota */
             wp_send_json_error( sprintf( __( 'Maximum license activation quota (%d) reached. Please upgrade or deactivate an unused domain.', 'wpfh-customer-portal' ), $max_activations ) );
         }
 
