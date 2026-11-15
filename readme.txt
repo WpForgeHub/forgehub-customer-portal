@@ -4,7 +4,7 @@ Tags: woocommerce, customer portal, downloads, digital products, magic link, pas
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,9 +23,9 @@ Transform WooCommerce's outdated default "My Account" area into a sleek, modern,
 * **Instant Post-Checkout Redirection:** Automatically routes buyers straight to their downloads upon order completion.
 
 ### 🚀 Pro Features
-* **License Key Manager:** Integrates with Freemius, WooCommerce API Manager, and EDD, presenting license keys with 1-click clipboard copy.
-* **In-Portal Priority Support Desk:** Embedded support ticket form sending technical inquiries directly to your team with environment metadata.
-* **Release Changelogs & Release Notes:** Customers can view what's new in each version before downloading.
+* **Priority Support Desk Engine:** Complete database-backed customer support ticketing with status tracking, threaded replies, and screenshot attachments.
+* **Domain License Manager & Remote Deactivation:** View active site activations per license key and remotely deactivate staging or retired domains.
+* **Automated PDF & Printable Invoices:** 1-click compliant tax invoices with EU VAT numbers, breakdowns, and printable PDF layouts.
 * **Custom Brand Themes:** Match your brand's accent colors and toggle between Dark Mode and Clean White.
 
 == Installation ==
@@ -35,6 +35,12 @@ Transform WooCommerce's outdated default "My Account" area into a sleek, modern,
 3. Configure your preferences under **WooCommerce -> Customer Portal**.
 
 == Changelog ==
+
+= 1.1.0 =
+* Feature (Pro): Priority Support Desk system with threaded replies, priority levels, and secure attachments.
+* Feature (Pro): Remote Domain License Delegation and 1-click seat revocation.
+* Feature (Pro): Automated compliant PDF & printable Invoice generator with EU VAT breakdown.
+* Enhancement: Standardized Freemius license hook filters (`fs_can_use_premium_code__wpfh-customer-portal`).
 
 = 1.0.0 =
 * Initial public release with Passwordless Magic Link Login, Modern Customer Portal tabs, and Instant Post-Checkout Download Redirection.
