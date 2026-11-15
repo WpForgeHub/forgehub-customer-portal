@@ -37,10 +37,10 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
             if ( file_exists( $fs_path ) ) {
                 require_once $fs_path;
                 $wpfh_cp_fs = fs_dynamic_init( [
-                    'id'                  => '45001',
+                    'id'                  => '45079',
                     'slug'                => 'wpfh-customer-portal',
                     'type'                => 'plugin',
-                    'public_key'          => 'pk_customer_portal_public_placeholder',
+                    'public_key'          => 'pk_6f94939b02bf51f6626a5e2803403',
                     'is_premium'          => false,
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
