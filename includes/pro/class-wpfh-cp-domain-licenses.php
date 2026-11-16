@@ -60,14 +60,14 @@ class WPFH_CP_Domain_Licenses {
         <div class="wpfh-cp-domain-manager-card" style="background:#0f172a; border:1px solid #1e293b; border-radius:12px; padding:24px; margin-top:28px;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; padding-bottom:14px; margin-bottom:16px;">
                 <div>
-                    <h3 style="margin:0; color:#f8fafc; font-size:18px;">🌐 <?php esc_html_e( 'Active Domain Allocations (Pro License Manager)', 'wpfh-customer-portal' ); ?></h3>
-                    <p style="margin:4px 0 0 0; color:#94a3b8; font-size:13px;"><?php esc_html_e( 'Manage domains connected to this license. Deactivate old staging or development domains to free up seats.', 'wpfh-customer-portal' ); ?></p>
+                    <h3 style="margin:0; color:#f8fafc; font-size:18px;">🌐 <?php esc_html_e( 'Active Domain Allocations (Pro License Manager)', 'forgehub-customer-portal' ); ?></h3>
+                    <p style="margin:4px 0 0 0; color:#94a3b8; font-size:13px;"><?php esc_html_e( 'Manage domains connected to this license. Deactivate old staging or development domains to free up seats.', 'forgehub-customer-portal' ); ?></p>
                 </div>
                 <div style="text-align:right;">
                     <span style="background:#1e293b; color:#38bdf8; padding:6px 12px; border-radius:6px; font-weight:700; font-size:13px;">
                         <?php
                         /* translators: 1: Active domain activations count, 2: Maximum activations limit */
-                        printf( esc_html__( '%1$d / %2$d Seats Used', 'wpfh-customer-portal' ), $active_count, $max_activations );
+                        printf( esc_html__( '%1$d / %2$d Seats Used', 'forgehub-customer-portal' ), $active_count, $max_activations );
                         ?>
                     </span>
                 </div>
@@ -76,15 +76,15 @@ class WPFH_CP_Domain_Licenses {
             <div id="wpfh-cp-domains-list-<?php echo esc_attr( $order_id ); ?>">
                 <?php if ( empty( $domains ) ) : ?>
                     <p class="wpfh-no-domains-msg" style="color:#64748b; font-size:14px; font-style:italic;">
-                        <?php esc_html_e( 'No domains are currently activated on this license key.', 'wpfh-customer-portal' ); ?>
+                        <?php esc_html_e( 'No domains are currently activated on this license key.', 'forgehub-customer-portal' ); ?>
                     </p>
                 <?php else : ?>
                     <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
                         <thead>
                             <tr style="border-bottom:1px solid #334155; text-align:left;">
-                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px;"><?php esc_html_e( 'Domain Name', 'wpfh-customer-portal' ); ?></th>
-                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px;"><?php esc_html_e( 'Activated On', 'wpfh-customer-portal' ); ?></th>
-                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px; text-align:right;"><?php esc_html_e( 'Action', 'wpfh-customer-portal' ); ?></th>
+                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px;"><?php esc_html_e( 'Domain Name', 'forgehub-customer-portal' ); ?></th>
+                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px;"><?php esc_html_e( 'Activated On', 'forgehub-customer-portal' ); ?></th>
+                                <th style="padding:8px 12px; color:#94a3b8; font-size:12px; text-align:right;"><?php esc_html_e( 'Action', 'forgehub-customer-portal' ); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,7 +104,7 @@ class WPFH_CP_Domain_Licenses {
                                                 data-order-id="<?php echo esc_attr( $order_id ); ?>" 
                                                 data-domain="<?php echo esc_attr( $domain_name ); ?>" 
                                                 style="background:#3b1114; color:#f87171; border:1px solid #7f1d1d; border-radius:6px; font-size:12px; padding:4px 10px; cursor:pointer;">
-                                            🗑️ <?php esc_html_e( 'Remote Deactivate', 'wpfh-customer-portal' ); ?>
+                                            🗑️ <?php esc_html_e( 'Remote Deactivate', 'forgehub-customer-portal' ); ?>
                                         </button>
                                     </td>
                                 </tr>
@@ -118,7 +118,7 @@ class WPFH_CP_Domain_Licenses {
             <div style="background:#131c2e; padding:12px 16px; border-radius:8px; display:flex; gap:10px; align-items:center;">
                 <input type="text" id="wpfh-new-domain-<?php echo esc_attr( $order_id ); ?>" placeholder="e.g. example.com" style="flex:1; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:8px 12px; border-radius:6px; font-size:13px;" />
                 <button type="button" class="button button-secondary wpfh-cp-add-domain-btn" data-order-id="<?php echo esc_attr( $order_id ); ?>" style="font-size:13px; font-weight:600;">
-                    ➕ <?php esc_html_e( 'Register Domain', 'wpfh-customer-portal' ); ?>
+                    ➕ <?php esc_html_e( 'Register Domain', 'forgehub-customer-portal' ); ?>
                 </button>
             </div>
         </div>
@@ -186,12 +186,12 @@ class WPFH_CP_Domain_Licenses {
         $order    = wc_get_order( $order_id );
 
         if ( ! $order ) {
-            wp_send_json_error( __( 'Order not found.', 'wpfh-customer-portal' ) );
+            wp_send_json_error( __( 'Order not found.', 'forgehub-customer-portal' ) );
         }
 
         $user_id = get_current_user_id();
         if ( (int) $order->get_customer_id() !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_send_json_error( __( 'Permission denied.', 'wpfh-customer-portal' ) );
+            wp_send_json_error( __( 'Permission denied.', 'forgehub-customer-portal' ) );
         }
 
         $domains = $order->get_meta( '_wpfh_activated_domains' ) ?: [];
@@ -210,10 +210,10 @@ class WPFH_CP_Domain_Licenses {
         if ( $removed ) {
             $order->update_meta_data( '_wpfh_activated_domains', $updated );
             $order->save();
-            wp_send_json_success( [ 'message' => __( 'Domain deactivated.', 'wpfh-customer-portal' ), 'remaining' => count( $updated ) ] );
+            wp_send_json_success( [ 'message' => __( 'Domain deactivated.', 'forgehub-customer-portal' ), 'remaining' => count( $updated ) ] );
         }
 
-        wp_send_json_error( __( 'Domain was not found in activation list.', 'wpfh-customer-portal' ) );
+        wp_send_json_error( __( 'Domain was not found in activation list.', 'forgehub-customer-portal' ) );
     }
 
     public static function ajax_activate_domain() {
@@ -225,12 +225,12 @@ class WPFH_CP_Domain_Licenses {
         $order    = wc_get_order( $order_id );
 
         if ( ! $order ) {
-            wp_send_json_error( __( 'Order not found.', 'wpfh-customer-portal' ) );
+            wp_send_json_error( __( 'Order not found.', 'forgehub-customer-portal' ) );
         }
 
         $user_id = get_current_user_id();
         if ( (int) $order->get_customer_id() !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_send_json_error( __( 'Permission denied.', 'wpfh-customer-portal' ) );
+            wp_send_json_error( __( 'Permission denied.', 'forgehub-customer-portal' ) );
         }
 
         $domains = $order->get_meta( '_wpfh_activated_domains' ) ?: [];
@@ -238,7 +238,7 @@ class WPFH_CP_Domain_Licenses {
 
         if ( count( $domains ) >= $max_activations ) {
             /* translators: %d: Maximum license activation quota */
-            wp_send_json_error( sprintf( __( 'Maximum license activation quota (%d) reached. Please upgrade or deactivate an unused domain.', 'wpfh-customer-portal' ), $max_activations ) );
+            wp_send_json_error( sprintf( __( 'Maximum license activation quota (%d) reached. Please upgrade or deactivate an unused domain.', 'forgehub-customer-portal' ), $max_activations ) );
         }
 
         // Add domain
@@ -250,6 +250,6 @@ class WPFH_CP_Domain_Licenses {
         $order->update_meta_data( '_wpfh_activated_domains', $domains );
         $order->save();
 
-        wp_send_json_success( [ 'message' => __( 'Domain activated successfully.', 'wpfh-customer-portal' ) ] );
+        wp_send_json_success( [ 'message' => __( 'Domain activated successfully.', 'forgehub-customer-portal' ) ] );
     }
 }

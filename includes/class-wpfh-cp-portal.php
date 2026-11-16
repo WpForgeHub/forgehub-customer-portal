@@ -33,8 +33,8 @@ class WPFH_CP_Portal {
             'enable_magic_link'    => 1,
             'enable_auto_redirect' => 1,
             'support_email'        => get_option( 'admin_email' ),
-            'welcome_heading'      => __( '🎉 Order Confirmed! Your Downloads Are Ready Below.', 'wpfh-customer-portal' ),
-            'welcome_subheading'   => __( 'Thank you for your order! You can download your software files below and access them anytime from your account.', 'wpfh-customer-portal' ),
+            'welcome_heading'      => __( '🎉 Order Confirmed! Your Downloads Are Ready Below.', 'forgehub-customer-portal' ),
+            'welcome_subheading'   => __( 'Thank you for your order! You can download your software files below and access them anytime from your account.', 'forgehub-customer-portal' ),
         ];
     }
 
@@ -48,12 +48,12 @@ class WPFH_CP_Portal {
 
     public static function customize_account_menu_items( $items ) {
         $reordered = [
-            'dashboard'       => __( '📊 Dashboard', 'wpfh-customer-portal' ),
-            'downloads'       => __( '📥 Downloads (.zip)', 'wpfh-customer-portal' ),
-            'orders'          => __( '📦 Orders & Licenses', 'wpfh-customer-portal' ),
-            'edit-account'    => __( '👤 Profile & Password', 'wpfh-customer-portal' ),
-            'support-tickets' => __( '💬 Support Desk', 'wpfh-customer-portal' ),
-            'customer-logout' => __( '🚪 Log Out', 'wpfh-customer-portal' ),
+            'dashboard'       => __( '📊 Dashboard', 'forgehub-customer-portal' ),
+            'downloads'       => __( '📥 Downloads (.zip)', 'forgehub-customer-portal' ),
+            'orders'          => __( '📦 Orders & Licenses', 'forgehub-customer-portal' ),
+            'edit-account'    => __( '👤 Profile & Password', 'forgehub-customer-portal' ),
+            'support-tickets' => __( '💬 Support Desk', 'forgehub-customer-portal' ),
+            'customer-logout' => __( '🚪 Log Out', 'forgehub-customer-portal' ),
         ];
 
         return $reordered;
@@ -76,7 +76,7 @@ class WPFH_CP_Portal {
         wp_localize_script( 'wpfh-cp-script', 'wpfhCpData', [
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'i18n'     => [
-                'copied' => __( 'Copied to clipboard!', 'wpfh-customer-portal' ),
+                'copied' => __( 'Copied to clipboard!', 'forgehub-customer-portal' ),
             ],
         ] );
     }
@@ -135,12 +135,12 @@ class WPFH_CP_Portal {
         if ( ! empty( $license_key ) ) {
             ?>
             <div class="wpfh-cp-license-box">
-                <h4>🔑 <?php esc_html_e( 'Your Product License Key', 'wpfh-customer-portal' ); ?></h4>
-                <p><?php esc_html_e( 'Use this license key inside your WordPress admin dashboard to activate Pro features and automated updates.', 'wpfh-customer-portal' ); ?></p>
+                <h4>🔑 <?php esc_html_e( 'Your Product License Key', 'forgehub-customer-portal' ); ?></h4>
+                <p><?php esc_html_e( 'Use this license key inside your WordPress admin dashboard to activate Pro features and automated updates.', 'forgehub-customer-portal' ); ?></p>
                 <div class="wpfh-cp-license-key-wrap">
                     <code><?php echo esc_html( $license_key ); ?></code>
                     <button type="button" class="button wpfh-cp-copy-key-btn" data-key="<?php echo esc_attr( $license_key ); ?>">
-                        <?php esc_html_e( 'Copy Key', 'wpfh-customer-portal' ); ?>
+                        <?php esc_html_e( 'Copy Key', 'forgehub-customer-portal' ); ?>
                     </button>
                 </div>
             </div>
@@ -158,34 +158,34 @@ class WPFH_CP_Portal {
         ?>
         <div class="wpfh-cp-support-card">
             <div class="wpfh-cp-support-header">
-                <h3>💬 <?php esc_html_e( 'Customer Support Desk', 'wpfh-customer-portal' ); ?></h3>
-                <p><?php esc_html_e( 'Have a question about installation, licensing, or feature requests? Send a message directly to our engineering team.', 'wpfh-customer-portal' ); ?></p>
+                <h3>💬 <?php esc_html_e( 'Customer Support Desk', 'forgehub-customer-portal' ); ?></h3>
+                <p><?php esc_html_e( 'Have a question about installation, licensing, or feature requests? Send a message directly to our engineering team.', 'forgehub-customer-portal' ); ?></p>
             </div>
 
             <form method="post" action="mailto:<?php echo esc_attr( $support_email ); ?>" enctype="text/plain" class="wpfh-cp-support-form">
                 <div class="wpfh-cp-form-group">
-                    <label><?php esc_html_e( 'Your Name & Email Address', 'wpfh-customer-portal' ); ?></label>
+                    <label><?php esc_html_e( 'Your Name & Email Address', 'forgehub-customer-portal' ); ?></label>
                     <input type="text" readonly value="<?php echo esc_attr( $user->display_name . ' (' . $user->user_email . ')' ); ?>" class="regular-text" />
                 </div>
 
                 <div class="wpfh-cp-form-group">
-                    <label><?php esc_html_e( 'Subject / Product Category', 'wpfh-customer-portal' ); ?></label>
+                    <label><?php esc_html_e( 'Subject / Product Category', 'forgehub-customer-portal' ); ?></label>
                     <select name="subject" class="regular-text">
-                        <option value="[Support Request] Digital Plugin Setup"><?php esc_html_e( 'Plugin Setup & Configuration', 'wpfh-customer-portal' ); ?></option>
-                        <option value="[Billing] Order or License Assistance"><?php esc_html_e( 'Billing & License Assistance', 'wpfh-customer-portal' ); ?></option>
-                        <option value="[Feature Request] Product Suggestion"><?php esc_html_e( 'Feature Request & Ideas', 'wpfh-customer-portal' ); ?></option>
-                        <option value="[Other] General Question"><?php esc_html_e( 'General Inquiries', 'wpfh-customer-portal' ); ?></option>
+                        <option value="[Support Request] Digital Plugin Setup"><?php esc_html_e( 'Plugin Setup & Configuration', 'forgehub-customer-portal' ); ?></option>
+                        <option value="[Billing] Order or License Assistance"><?php esc_html_e( 'Billing & License Assistance', 'forgehub-customer-portal' ); ?></option>
+                        <option value="[Feature Request] Product Suggestion"><?php esc_html_e( 'Feature Request & Ideas', 'forgehub-customer-portal' ); ?></option>
+                        <option value="[Other] General Question"><?php esc_html_e( 'General Inquiries', 'forgehub-customer-portal' ); ?></option>
                     </select>
                 </div>
 
                 <div class="wpfh-cp-form-group">
-                    <label><?php esc_html_e( 'Message Details', 'wpfh-customer-portal' ); ?></label>
-                    <textarea name="body" rows="6" placeholder="<?php esc_attr_e( 'Describe your issue, WordPress version, or question in detail...', 'wpfh-customer-portal' ); ?>" required></textarea>
+                    <label><?php esc_html_e( 'Message Details', 'forgehub-customer-portal' ); ?></label>
+                    <textarea name="body" rows="6" placeholder="<?php esc_attr_e( 'Describe your issue, WordPress version, or question in detail...', 'forgehub-customer-portal' ); ?>" required></textarea>
                 </div>
 
                 <div class="wpfh-cp-form-submit">
                     <button type="submit" class="button button-primary">
-                        🚀 <?php esc_html_e( 'Submit Support Ticket', 'wpfh-customer-portal' ); ?>
+                        🚀 <?php esc_html_e( 'Submit Support Ticket', 'forgehub-customer-portal' ); ?>
                     </button>
                 </div>
             </form>
@@ -199,10 +199,10 @@ class WPFH_CP_Portal {
     public static function register_admin_menu() {
         add_submenu_page(
             'woocommerce',
-            __( 'Customer Portal Settings', 'wpfh-customer-portal' ),
-            __( 'Customer Portal', 'wpfh-customer-portal' ),
+            __( 'Customer Portal Settings', 'forgehub-customer-portal' ),
+            __( 'Customer Portal', 'forgehub-customer-portal' ),
             'manage_woocommerce',
-            'wpfh-customer-portal',
+            'forgehub-customer-portal',
             [ __CLASS__, 'render_admin_settings_page' ]
         );
     }
@@ -229,60 +229,60 @@ class WPFH_CP_Portal {
         $is_pro   = wpfh_cp_fs()->can_use_premium_code();
         ?>
         <div class="wrap wpfh-cp-admin-wrap">
-            <h1><?php esc_html_e( 'WPForgeHub Customer Portal Settings', 'wpfh-customer-portal' ); ?></h1>
+            <h1><?php esc_html_e( 'WPForgeHub Customer Portal Settings', 'forgehub-customer-portal' ); ?></h1>
             <p class="description">
-                <?php esc_html_e( 'Configure the modern SaaS customer dashboard, passwordless magic links, and post-checkout download flow.', 'wpfh-customer-portal' ); ?>
+                <?php esc_html_e( 'Configure the modern SaaS customer dashboard, passwordless magic links, and post-checkout download flow.', 'forgehub-customer-portal' ); ?>
             </p>
 
             <form method="post" action="options.php">
                 <?php settings_fields( 'wpfh_cp_settings_group' ); ?>
                 <table class="form-table" role="presentation">
                     <tr>
-                        <th scope="row"><label for="wpfh_cp_theme_mode"><?php esc_html_e( 'Portal Theme Mode', 'wpfh-customer-portal' ); ?></label></th>
+                        <th scope="row"><label for="wpfh_cp_theme_mode"><?php esc_html_e( 'Portal Theme Mode', 'forgehub-customer-portal' ); ?></label></th>
                         <td>
                             <select name="wpfh_cp_settings[theme_mode]" id="wpfh_cp_theme_mode">
-                                <option value="dark" <?php selected( $settings['theme_mode'], 'dark' ); ?>><?php esc_html_e( 'Dark Slate (WPForgeHub Theme)', 'wpfh-customer-portal' ); ?></option>
-                                <option value="light" <?php selected( $settings['theme_mode'], 'light' ); ?>><?php esc_html_e( 'Clean White (Classic)', 'wpfh-customer-portal' ); ?></option>
+                                <option value="dark" <?php selected( $settings['theme_mode'], 'dark' ); ?>><?php esc_html_e( 'Dark Slate (WPForgeHub Theme)', 'forgehub-customer-portal' ); ?></option>
+                                <option value="light" <?php selected( $settings['theme_mode'], 'light' ); ?>><?php esc_html_e( 'Clean White (Classic)', 'forgehub-customer-portal' ); ?></option>
                             </select>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php esc_html_e( 'Passwordless Magic Link', 'wpfh-customer-portal' ); ?></th>
+                        <th scope="row"><?php esc_html_e( 'Passwordless Magic Link', 'forgehub-customer-portal' ); ?></th>
                         <td>
                             <label>
                                 <input type="checkbox" name="wpfh_cp_settings[enable_magic_link]" value="1" <?php checked( $settings['enable_magic_link'], 1 ); ?> />
-                                <?php esc_html_e( 'Enable 1-Click Passwordless Magic Link Login on the My Account page.', 'wpfh-customer-portal' ); ?>
+                                <?php esc_html_e( 'Enable 1-Click Passwordless Magic Link Login on the My Account page.', 'forgehub-customer-portal' ); ?>
                             </label>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><?php esc_html_e( 'Post-Checkout Redirect', 'wpfh-customer-portal' ); ?></th>
+                        <th scope="row"><?php esc_html_e( 'Post-Checkout Redirect', 'forgehub-customer-portal' ); ?></th>
                         <td>
                             <label>
                                 <input type="checkbox" name="wpfh_cp_settings[enable_auto_redirect]" value="1" <?php checked( $settings['enable_auto_redirect'], 1 ); ?> />
-                                <?php esc_html_e( 'Automatically redirect customers to Downloads immediately upon order completion.', 'wpfh-customer-portal' ); ?>
+                                <?php esc_html_e( 'Automatically redirect customers to Downloads immediately upon order completion.', 'forgehub-customer-portal' ); ?>
                             </label>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><label for="wpfh_cp_support_email"><?php esc_html_e( 'Support Email Address', 'wpfh-customer-portal' ); ?></label></th>
+                        <th scope="row"><label for="wpfh_cp_support_email"><?php esc_html_e( 'Support Email Address', 'forgehub-customer-portal' ); ?></label></th>
                         <td>
                             <input name="wpfh_cp_settings[support_email]" type="email" id="wpfh_cp_support_email" value="<?php echo esc_attr( $settings['support_email'] ); ?>" class="regular-text" />
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><label for="wpfh_cp_welcome_heading"><?php esc_html_e( 'Welcome Banner Heading', 'wpfh-customer-portal' ); ?></label></th>
+                        <th scope="row"><label for="wpfh_cp_welcome_heading"><?php esc_html_e( 'Welcome Banner Heading', 'forgehub-customer-portal' ); ?></label></th>
                         <td>
                             <input name="wpfh_cp_settings[welcome_heading]" type="text" id="wpfh_cp_welcome_heading" value="<?php echo esc_attr( $settings['welcome_heading'] ); ?>" class="regular-text" />
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><label for="wpfh_cp_welcome_subheading"><?php esc_html_e( 'Welcome Banner Subtext', 'wpfh-customer-portal' ); ?></label></th>
+                        <th scope="row"><label for="wpfh_cp_welcome_subheading"><?php esc_html_e( 'Welcome Banner Subtext', 'forgehub-customer-portal' ); ?></label></th>
                         <td>
                             <input name="wpfh_cp_settings[welcome_subheading]" type="text" id="wpfh_cp_welcome_subheading" value="<?php echo esc_attr( $settings['welcome_subheading'] ); ?>" class="large-text" />
                         </td>

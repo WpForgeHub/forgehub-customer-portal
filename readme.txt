@@ -1,14 +1,14 @@
-=== WPForgeHub Digital Customer Portal & Downloads for WooCommerce ===
+=== Customer Portal ===
 Contributors: wpforgehub
 Tags: woocommerce, customer portal, downloads, digital products, magic link, passwordless, license manager
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Modern, high-performance customer dashboard for WooCommerce digital products with passwordless magic link login, downloads manager, and license keys.
+Modern, high-performance customer dashboard for digital products with passwordless magic link login, downloads manager, and license keys.
 
 == Description ==
 

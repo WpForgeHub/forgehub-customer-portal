@@ -30,13 +30,13 @@ class WPFH_CP_Support_Tickets {
     public static function register_post_type() {
         register_post_type( 'wpfh_ticket', [
             'labels' => [
-                'name'               => __( 'Support Tickets', 'wpfh-customer-portal' ),
-                'singular_name'      => __( 'Support Ticket', 'wpfh-customer-portal' ),
-                'menu_name'          => __( 'Support Tickets', 'wpfh-customer-portal' ),
-                'add_new'            => __( 'New Ticket', 'wpfh-customer-portal' ),
-                'add_new_item'       => __( 'Create Support Ticket', 'wpfh-customer-portal' ),
-                'edit_item'          => __( 'Edit Support Ticket', 'wpfh-customer-portal' ),
-                'view_item'          => __( 'View Support Ticket', 'wpfh-customer-portal' ),
+                'name'               => __( 'Support Tickets', 'forgehub-customer-portal' ),
+                'singular_name'      => __( 'Support Ticket', 'forgehub-customer-portal' ),
+                'menu_name'          => __( 'Support Tickets', 'forgehub-customer-portal' ),
+                'add_new'            => __( 'New Ticket', 'forgehub-customer-portal' ),
+                'add_new_item'       => __( 'Create Support Ticket', 'forgehub-customer-portal' ),
+                'edit_item'          => __( 'Edit Support Ticket', 'forgehub-customer-portal' ),
+                'view_item'          => __( 'View Support Ticket', 'forgehub-customer-portal' ),
             ],
             'public'              => false,
             'show_ui'             => true,
@@ -53,12 +53,12 @@ class WPFH_CP_Support_Tickets {
     public static function admin_columns( $cols ) {
         return [
             'cb'          => '<input type="checkbox" />',
-            'title'       => __( 'Subject', 'wpfh-customer-portal' ),
-            'customer'    => __( 'Customer', 'wpfh-customer-portal' ),
-            'status'      => __( 'Status', 'wpfh-customer-portal' ),
-            'priority'    => __( 'Priority', 'wpfh-customer-portal' ),
-            'product'     => __( 'Product', 'wpfh-customer-portal' ),
-            'date'        => __( 'Created', 'wpfh-customer-portal' ),
+            'title'       => __( 'Subject', 'forgehub-customer-portal' ),
+            'customer'    => __( 'Customer', 'forgehub-customer-portal' ),
+            'status'      => __( 'Status', 'forgehub-customer-portal' ),
+            'priority'    => __( 'Priority', 'forgehub-customer-portal' ),
+            'product'     => __( 'Product', 'forgehub-customer-portal' ),
+            'date'        => __( 'Created', 'forgehub-customer-portal' ),
         ];
     }
 
@@ -105,7 +105,7 @@ class WPFH_CP_Support_Tickets {
             $message  = wp_kses_post( $_POST['ticket_message'] ?? '' );
 
             if ( empty( $subject ) || empty( $message ) ) {
-                wc_add_notice( __( 'Please provide both a subject and details for your ticket.', 'wpfh-customer-portal' ), 'error' );
+                wc_add_notice( __( 'Please provide both a subject and details for your ticket.', 'forgehub-customer-portal' ), 'error' );
                 return;
             }
 
@@ -129,7 +129,7 @@ class WPFH_CP_Support_Tickets {
                 }
 
                 /* translators: %d: Support ticket ID number */
-                wc_add_notice( sprintf( __( 'Support ticket #%d created successfully! Our team will respond shortly.', 'wpfh-customer-portal' ), $ticket_id ), 'success' );
+                wc_add_notice( sprintf( __( 'Support ticket #%d created successfully! Our team will respond shortly.', 'forgehub-customer-portal' ), $ticket_id ), 'success' );
                 wp_safe_redirect( wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) );
                 exit;
             }
@@ -144,7 +144,7 @@ class WPFH_CP_Support_Tickets {
 
             $ticket = get_post( $ticket_id );
             if ( ! $ticket || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
-                wc_add_notice( __( 'Unauthorized action.', 'wpfh-customer-portal' ), 'error' );
+                wc_add_notice( __( 'Unauthorized action.', 'forgehub-customer-portal' ), 'error' );
                 return;
             }
 
@@ -168,7 +168,7 @@ class WPFH_CP_Support_Tickets {
                     self::handle_attachment_upload( $ticket_id, $_FILES['reply_attachment'] );
                 }
 
-                wc_add_notice( __( 'Your reply has been posted.', 'wpfh-customer-portal' ), 'success' );
+                wc_add_notice( __( 'Your reply has been posted.', 'forgehub-customer-portal' ), 'success' );
                 wp_safe_redirect( add_query_arg( [ 'ticket_id' => $ticket_id ], wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) ) );
                 exit;
             }
@@ -183,7 +183,7 @@ class WPFH_CP_Support_Tickets {
             if ( $ticket && ( (int) $ticket->post_author === $user_id || current_user_can( 'manage_woocommerce' ) ) ) {
                 update_post_meta( $ticket_id, '_wpfh_ticket_status', 'resolved' );
                 /* translators: %d: Support ticket ID number */
-                wc_add_notice( sprintf( __( 'Ticket #%d has been marked as resolved.', 'wpfh-customer-portal' ), $ticket_id ), 'success' );
+                wc_add_notice( sprintf( __( 'Ticket #%d has been marked as resolved.', 'forgehub-customer-portal' ), $ticket_id ), 'success' );
                 wp_safe_redirect( add_query_arg( [ 'ticket_id' => $ticket_id ], wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) ) );
                 exit;
             }
@@ -252,27 +252,27 @@ class WPFH_CP_Support_Tickets {
         <div class="wpfh-cp-tickets-dashboard">
             <div class="wpfh-cp-tickets-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <div>
-                    <h3 style="margin:0 0 5px 0;">💬 <?php esc_html_e( 'Priority Support Desk (Pro)', 'wpfh-customer-portal' ); ?></h3>
-                    <p style="margin:0; color:#94a3b8; font-size:14px;"><?php esc_html_e( 'Direct SLA-backed communication channel with our senior engineering team.', 'wpfh-customer-portal' ); ?></p>
+                    <h3 style="margin:0 0 5px 0;">💬 <?php esc_html_e( 'Priority Support Desk (Pro)', 'forgehub-customer-portal' ); ?></h3>
+                    <p style="margin:0; color:#94a3b8; font-size:14px;"><?php esc_html_e( 'Direct SLA-backed communication channel with our senior engineering team.', 'forgehub-customer-portal' ); ?></p>
                 </div>
                 <a href="<?php echo esc_url( $new_ticket_url ); ?>" class="button button-primary" style="padding:10px 18px; border-radius:8px; font-weight:600;">
-                    ➕ <?php esc_html_e( 'Open New Ticket', 'wpfh-customer-portal' ); ?>
+                    ➕ <?php esc_html_e( 'Open New Ticket', 'forgehub-customer-portal' ); ?>
                 </a>
             </div>
 
             <?php if ( empty( $tickets ) ) : ?>
                 <div class="woocommerce-info" style="background:#0f172a; border-left-color:#38bdf8; color:#cbd5e1; padding:20px; border-radius:8px;">
-                    <p style="margin:0;"><?php esc_html_e( 'You have no support tickets yet. Have a technical question or need assistance? Click "Open New Ticket" above.', 'wpfh-customer-portal' ); ?></p>
+                    <p style="margin:0;"><?php esc_html_e( 'You have no support tickets yet. Have a technical question or need assistance? Click "Open New Ticket" above.', 'forgehub-customer-portal' ); ?></p>
                 </div>
             <?php else : ?>
                 <table class="woocommerce-orders-table shop_table shop_table_responsive my_account_orders" style="width:100%; border-collapse:collapse; background:#0f172a; border-radius:10px; overflow:hidden;">
                     <thead>
                         <tr style="border-bottom:1px solid #1e293b; background:#1e293b;">
-                            <th style="padding:12px 16px; color:#94a3b8; text-align:left;"><?php esc_html_e( 'Ticket', 'wpfh-customer-portal' ); ?></th>
-                            <th style="padding:12px 16px; color:#94a3b8; text-align:left;"><?php esc_html_e( 'Category', 'wpfh-customer-portal' ); ?></th>
-                            <th style="padding:12px 16px; color:#94a3b8; text-align:center;"><?php esc_html_e( 'Priority', 'wpfh-customer-portal' ); ?></th>
-                            <th style="padding:12px 16px; color:#94a3b8; text-align:center;"><?php esc_html_e( 'Status', 'wpfh-customer-portal' ); ?></th>
-                            <th style="padding:12px 16px; color:#94a3b8; text-align:right;"><?php esc_html_e( 'Actions', 'wpfh-customer-portal' ); ?></th>
+                            <th style="padding:12px 16px; color:#94a3b8; text-align:left;"><?php esc_html_e( 'Ticket', 'forgehub-customer-portal' ); ?></th>
+                            <th style="padding:12px 16px; color:#94a3b8; text-align:left;"><?php esc_html_e( 'Category', 'forgehub-customer-portal' ); ?></th>
+                            <th style="padding:12px 16px; color:#94a3b8; text-align:center;"><?php esc_html_e( 'Priority', 'forgehub-customer-portal' ); ?></th>
+                            <th style="padding:12px 16px; color:#94a3b8; text-align:center;"><?php esc_html_e( 'Status', 'forgehub-customer-portal' ); ?></th>
+                            <th style="padding:12px 16px; color:#94a3b8; text-align:right;"><?php esc_html_e( 'Actions', 'forgehub-customer-portal' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -300,7 +300,7 @@ class WPFH_CP_Support_Tickets {
                                 </td>
                                 <td style="padding:14px 16px; text-align:right;">
                                     <a href="<?php echo esc_url( $view_url ); ?>" class="button" style="padding:6px 14px; font-size:13px; border-radius:6px; background:#1e293b; color:#f8fafc; border:1px solid #334155;">
-                                        <?php esc_html_e( 'View Thread', 'wpfh-customer-portal' ); ?> →
+                                        <?php esc_html_e( 'View Thread', 'forgehub-customer-portal' ); ?> →
                                     </a>
                                 </td>
                             </tr>
@@ -317,8 +317,8 @@ class WPFH_CP_Support_Tickets {
         ?>
         <div class="wpfh-cp-support-card" style="background:#0f172a; padding:28px; border-radius:12px; border:1px solid #1e293b;">
             <div style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="margin:0; color:#f8fafc;">🚀 <?php esc_html_e( 'Open New Priority Support Ticket', 'wpfh-customer-portal' ); ?></h3>
-                <a href="<?php echo esc_url( $back_url ); ?>" style="color:#94a3b8; text-decoration:none; font-size:14px;">← <?php esc_html_e( 'Back to Tickets', 'wpfh-customer-portal' ); ?></a>
+                <h3 style="margin:0; color:#f8fafc;">🚀 <?php esc_html_e( 'Open New Priority Support Ticket', 'forgehub-customer-portal' ); ?></h3>
+                <a href="<?php echo esc_url( $back_url ); ?>" style="color:#94a3b8; text-decoration:none; font-size:14px;">← <?php esc_html_e( 'Back to Tickets', 'forgehub-customer-portal' ); ?></a>
             </div>
 
             <form method="post" enctype="multipart/form-data">
@@ -326,13 +326,13 @@ class WPFH_CP_Support_Tickets {
                 <?php wp_nonce_field( 'wpfh_cp_create_ticket_action', 'wpfh_cp_nonce' ); ?>
 
                 <div class="wpfh-cp-form-group" style="margin-bottom:16px;">
-                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Subject / Issue Summary', 'wpfh-customer-portal' ); ?></label>
-                    <input type="text" name="ticket_subject" class="regular-text" style="width:100%; max-width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'e.g. Question regarding Smart Redirect regex rules', 'wpfh-customer-portal' ); ?>" />
+                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Subject / Issue Summary', 'forgehub-customer-portal' ); ?></label>
+                    <input type="text" name="ticket_subject" class="regular-text" style="width:100%; max-width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'e.g. Question regarding Smart Redirect regex rules', 'forgehub-customer-portal' ); ?>" />
                 </div>
 
                 <div style="display:flex; gap:16px; margin-bottom:16px;">
                     <div style="flex:1;">
-                        <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Product / Category', 'wpfh-customer-portal' ); ?></label>
+                        <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Product / Category', 'forgehub-customer-portal' ); ?></label>
                         <select name="ticket_category" style="width:100%; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;">
                             <option value="Customer Portal Pro">WPForgeHub Customer Portal</option>
                             <option value="Frictionless Checkout Pro">WPForgeHub Frictionless Checkout</option>
@@ -344,27 +344,27 @@ class WPFH_CP_Support_Tickets {
                         </select>
                     </div>
                     <div style="flex:1;">
-                        <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Priority Level', 'wpfh-customer-portal' ); ?></label>
+                        <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Priority Level', 'forgehub-customer-portal' ); ?></label>
                         <select name="ticket_priority" style="width:100%; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;">
-                            <option value="normal"><?php esc_html_e( 'Normal (Within 24 Hours)', 'wpfh-customer-portal' ); ?></option>
-                            <option value="high"><?php esc_html_e( 'High (Within 6 Hours)', 'wpfh-customer-portal' ); ?></option>
-                            <option value="urgent"><?php esc_html_e( 'Urgent Production Outage (< 2 Hours)', 'wpfh-customer-portal' ); ?></option>
+                            <option value="normal"><?php esc_html_e( 'Normal (Within 24 Hours)', 'forgehub-customer-portal' ); ?></option>
+                            <option value="high"><?php esc_html_e( 'High (Within 6 Hours)', 'forgehub-customer-portal' ); ?></option>
+                            <option value="urgent"><?php esc_html_e( 'Urgent Production Outage (< 2 Hours)', 'forgehub-customer-portal' ); ?></option>
                         </select>
                     </div>
                 </div>
 
                 <div class="wpfh-cp-form-group" style="margin-bottom:16px;">
-                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Detailed Problem Description', 'wpfh-customer-portal' ); ?></label>
-                    <textarea name="ticket_message" rows="6" style="width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:12px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'Please provide steps to reproduce, WordPress version, error messages, and URL if applicable...', 'wpfh-customer-portal' ); ?>"></textarea>
+                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Detailed Problem Description', 'forgehub-customer-portal' ); ?></label>
+                    <textarea name="ticket_message" rows="6" style="width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:12px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'Please provide steps to reproduce, WordPress version, error messages, and URL if applicable...', 'forgehub-customer-portal' ); ?>"></textarea>
                 </div>
 
                 <div class="wpfh-cp-form-group" style="margin-bottom:20px;">
-                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Attachment (Screenshot or Logs: PNG, JPG, PDF, ZIP)', 'wpfh-customer-portal' ); ?></label>
+                    <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Attachment (Screenshot or Logs: PNG, JPG, PDF, ZIP)', 'forgehub-customer-portal' ); ?></label>
                     <input type="file" name="ticket_attachment" accept=".png,.jpg,.jpeg,.pdf,.zip,.txt" style="color:#94a3b8;" />
                 </div>
 
                 <button type="submit" class="button button-primary" style="padding:12px 24px; font-size:15px; border-radius:8px; font-weight:600;">
-                    🚀 <?php esc_html_e( 'Submit Priority Ticket', 'wpfh-customer-portal' ); ?>
+                    🚀 <?php esc_html_e( 'Submit Priority Ticket', 'forgehub-customer-portal' ); ?>
                 </button>
             </form>
         </div>
@@ -374,7 +374,7 @@ class WPFH_CP_Support_Tickets {
     private static function render_single_ticket_thread( $ticket_id, $user_id ) {
         $ticket = get_post( $ticket_id );
         if ( ! $ticket || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
-            echo '<div class="woocommerce-error">' . esc_html__( 'Ticket not found or access denied.', 'wpfh-customer-portal' ) . '</div>';
+            echo '<div class="woocommerce-error">' . esc_html__( 'Ticket not found or access denied.', 'forgehub-customer-portal' ) . '</div>';
             return;
         }
 
@@ -393,12 +393,12 @@ class WPFH_CP_Support_Tickets {
         <div class="wpfh-cp-ticket-thread" style="background:#0f172a; padding:24px; border-radius:12px; border:1px solid #1e293b;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; padding-bottom:16px; margin-bottom:20px;">
                 <div>
-                    <a href="<?php echo esc_url( $back_url ); ?>" style="color:#94a3b8; text-decoration:none; font-size:13px; display:inline-block; margin-bottom:8px;">← <?php esc_html_e( 'Back to All Tickets', 'wpfh-customer-portal' ); ?></a>
+                    <a href="<?php echo esc_url( $back_url ); ?>" style="color:#94a3b8; text-decoration:none; font-size:13px; display:inline-block; margin-bottom:8px;">← <?php esc_html_e( 'Back to All Tickets', 'forgehub-customer-portal' ); ?></a>
                     <h2 style="margin:0; color:#f8fafc; font-size:22px;">#<?php echo esc_html( $ticket->ID ); ?> — <?php echo esc_html( $ticket->post_title ); ?></h2>
                     <div style="margin-top:6px; color:#64748b; font-size:13px;">
-                        <span><?php esc_html_e( 'Category:', 'wpfh-customer-portal' ); ?> <strong><?php echo esc_html( $product ); ?></strong></span> | 
-                        <span><?php esc_html_e( 'Priority:', 'wpfh-customer-portal' ); ?> <strong style="text-transform:uppercase;"><?php echo esc_html( $priority ); ?></strong></span> | 
-                        <span><?php esc_html_e( 'Status:', 'wpfh-customer-portal' ); ?> <strong style="text-transform:uppercase; color:#38bdf8;"><?php echo esc_html( $status ); ?></strong></span>
+                        <span><?php esc_html_e( 'Category:', 'forgehub-customer-portal' ); ?> <strong><?php echo esc_html( $product ); ?></strong></span> | 
+                        <span><?php esc_html_e( 'Priority:', 'forgehub-customer-portal' ); ?> <strong style="text-transform:uppercase;"><?php echo esc_html( $priority ); ?></strong></span> | 
+                        <span><?php esc_html_e( 'Status:', 'forgehub-customer-portal' ); ?> <strong style="text-transform:uppercase; color:#38bdf8;"><?php echo esc_html( $status ); ?></strong></span>
                     </div>
                 </div>
 
@@ -408,7 +408,7 @@ class WPFH_CP_Support_Tickets {
                         <input type="hidden" name="ticket_id" value="<?php echo esc_attr( $ticket->ID ); ?>" />
                         <?php wp_nonce_field( 'wpfh_cp_close_ticket_action', 'wpfh_cp_nonce' ); ?>
                         <button type="submit" class="button" style="background:#1e293b; color:#10b981; border:1px solid #10b981; border-radius:6px; font-weight:600; padding:6px 12px;">
-                            ✓ <?php esc_html_e( 'Mark as Resolved', 'wpfh-customer-portal' ); ?>
+                            ✓ <?php esc_html_e( 'Mark as Resolved', 'forgehub-customer-portal' ); ?>
                         </button>
                     </form>
                 <?php endif; ?>
@@ -423,7 +423,7 @@ class WPFH_CP_Support_Tickets {
                 <div style="color:#e2e8f0; line-height:1.6;"><?php echo wp_kses_post( wpautop( $ticket->post_content ) ); ?></div>
                 <?php if ( ! empty( $attachments ) ) : ?>
                     <div style="margin-top:14px; padding-top:10px; border-top:1px solid #334155;">
-                        <span style="font-size:12px; color:#94a3b8; font-weight:600;">📎 <?php esc_html_e( 'Attachments:', 'wpfh-customer-portal' ); ?></span>
+                        <span style="font-size:12px; color:#94a3b8; font-weight:600;">📎 <?php esc_html_e( 'Attachments:', 'forgehub-customer-portal' ); ?></span>
                         <ul style="margin:6px 0 0 16px; padding:0;">
                             <?php foreach ( $attachments as $att ) : ?>
                                 <li><a href="<?php echo esc_url( $att['url'] ); ?>" target="_blank" rel="noopener noreferrer" style="color:#38bdf8; font-size:13px;"><?php echo esc_html( $att['file'] ); ?></a></li>
@@ -454,14 +454,14 @@ class WPFH_CP_Support_Tickets {
 
             <!-- Reply Box -->
             <div style="background:#131c2e; padding:20px; border-radius:8px; border:1px solid #1e293b;">
-                <h4 style="margin:0 0 12px 0; color:#f8fafc;">✍️ <?php esc_html_e( 'Add Reply to Ticket', 'wpfh-customer-portal' ); ?></h4>
+                <h4 style="margin:0 0 12px 0; color:#f8fafc;">✍️ <?php esc_html_e( 'Add Reply to Ticket', 'forgehub-customer-portal' ); ?></h4>
                 <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="wpfh_action" value="reply_ticket" />
                     <input type="hidden" name="ticket_id" value="<?php echo esc_attr( $ticket->ID ); ?>" />
                     <?php wp_nonce_field( 'wpfh_cp_reply_ticket_action', 'wpfh_cp_nonce' ); ?>
 
                     <div style="margin-bottom:12px;">
-                        <textarea name="reply_message" rows="4" style="width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" placeholder="<?php esc_attr_e( 'Type your reply or follow-up question here...', 'wpfh-customer-portal' ); ?>" required></textarea>
+                        <textarea name="reply_message" rows="4" style="width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" placeholder="<?php esc_attr_e( 'Type your reply or follow-up question here...', 'forgehub-customer-portal' ); ?>" required></textarea>
                     </div>
 
                     <div style="margin-bottom:16px;">
@@ -469,7 +469,7 @@ class WPFH_CP_Support_Tickets {
                     </div>
 
                     <button type="submit" class="button button-primary" style="padding:10px 20px; border-radius:6px; font-weight:600;">
-                        <?php esc_html_e( 'Send Reply', 'wpfh-customer-portal' ); ?>
+                        <?php esc_html_e( 'Send Reply', 'forgehub-customer-portal' ); ?>
                     </button>
                 </form>
             </div>

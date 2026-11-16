@@ -32,7 +32,7 @@ class WPFH_CP_PDF_Invoices {
 
         $actions['wpfh_invoice'] = [
             'url'  => $invoice_url,
-            'name' => __( '📄 Invoice', 'wpfh-customer-portal' ),
+            'name' => __( '📄 Invoice', 'forgehub-customer-portal' ),
         ];
 
         return $actions;
@@ -50,7 +50,7 @@ class WPFH_CP_PDF_Invoices {
         ?>
         <div style="margin-top:16px; margin-bottom:16px;">
             <a href="<?php echo esc_url( $invoice_url ); ?>" target="_blank" class="button" style="background:#1e293b; color:#38bdf8; border:1px solid #38bdf8; border-radius:6px; font-weight:600; padding:8px 16px;">
-                📄 <?php esc_html_e( 'Download Official PDF Invoice', 'wpfh-customer-portal' ); ?>
+                📄 <?php esc_html_e( 'Download Official PDF Invoice', 'forgehub-customer-portal' ); ?>
             </a>
         </div>
         <?php
@@ -66,21 +66,21 @@ class WPFH_CP_PDF_Invoices {
 
         $order_id = absint( $_GET['order_id'] ?? 0 );
         if ( ! $order_id ) {
-            wp_die( __( 'Invalid order ID.', 'wpfh-customer-portal' ) );
+            wp_die( __( 'Invalid order ID.', 'forgehub-customer-portal' ) );
         }
 
         if ( ! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'wpfh_download_invoice_' . $order_id ) ) {
-            wp_die( __( 'Security token expired. Please refresh your account page.', 'wpfh-customer-portal' ) );
+            wp_die( __( 'Security token expired. Please refresh your account page.', 'forgehub-customer-portal' ) );
         }
 
         $order = wc_get_order( $order_id );
         if ( ! $order ) {
-            wp_die( __( 'Order not found.', 'wpfh-customer-portal' ) );
+            wp_die( __( 'Order not found.', 'forgehub-customer-portal' ) );
         }
 
         $user_id = get_current_user_id();
         if ( ! current_user_can( 'manage_woocommerce' ) && (int) $order->get_customer_id() !== $user_id ) {
-            wp_die( __( 'Access denied. You do not have permission to view this invoice.', 'wpfh-customer-portal' ) );
+            wp_die( __( 'Access denied. You do not have permission to view this invoice.', 'forgehub-customer-portal' ) );
         }
 
         self::render_invoice_html( $order );

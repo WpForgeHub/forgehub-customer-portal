@@ -1,16 +1,17 @@
 <?php
 /**
- * Plugin Name:       WPForgeHub Digital Customer Portal & Downloads for WooCommerce
+ * Plugin Name:       Customer Portal
  * Plugin URI:        https://wpforgehub.com/plugins/customer-portal/
  * Description:       Modern, high-performance customer dashboard for WooCommerce digital products. Features 1-click passwordless Magic Link login, clean Downloads (.zip) manager, license management, and instant post-checkout redirect.
- * Version:           1.1.1
+ * Version:           1.1.2
  * Requires at least: 6.0
+ * Tested up to:      7.1
  * Requires PHP:      7.4
  * Author:            WPForgeHub
  * Author URI:        https://wpforgehub.com
- * License:           GPL v2 or later
+ * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       wpfh-customer-portal
+ * Text Domain:       forgehub-customer-portal
  * Domain Path:       /languages
  *
  * @package WPForgeHub\CustomerPortal
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'WPFH_CP_VERSION', '1.1.1' );
+define( 'WPFH_CP_VERSION', '1.1.2' );
 define( 'WPFH_CP_FILE', __FILE__ );
 define( 'WPFH_CP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPFH_CP_URL', plugin_dir_url( __FILE__ ) );
@@ -45,7 +46,7 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
                     'menu'                => [
-                        'slug'    => 'wpfh-customer-portal',
+                        'slug'    => 'forgehub-customer-portal',
                         'parent'  => [
                             'slug' => 'woocommerce',
                         ],
@@ -86,7 +87,7 @@ function wpfh_cp_check_woocommerce_dependency() {
         add_action( 'admin_notices', function() {
             ?>
             <div class="notice notice-warning is-dismissible">
-                <p><strong>WPForgeHub Customer Portal:</strong> <?php esc_html_e( 'WooCommerce is required for the Customer Portal to operate. Please install and activate WooCommerce.', 'wpfh-customer-portal' ); ?></p>
+                <p><strong>Customer Portal:</strong> <?php esc_html_e( 'WooCommerce is required for the Customer Portal to operate. Please install and activate WooCommerce.', 'forgehub-customer-portal' ); ?></p>
             </div>
             <?php
         } );
