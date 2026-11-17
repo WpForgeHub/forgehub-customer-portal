@@ -73,7 +73,7 @@ class WPFH_CP_Magic_Link {
         $subject = sprintf( __( '✨ Your 1-Click Login Link for %s', 'forgehub-customer-portal' ), get_bloginfo( 'name' ) );
         $message = sprintf(
             /* translators: 1: User display name, 2: Magic login URL, 3: Site title */
-            __( "Hello %s,\n\nClick the secure link below to sign in instantly to your Customer Portal without a password:\n\n%s\n\nThis single-use link will expire in 15 minutes.\n\nWarm regards,\n%s", 'forgehub-customer-portal' ),
+            __( "Hello %1\$s,\n\nClick the secure link below to sign in instantly to your Customer Portal without a password:\n\n%2\$s\n\nThis single-use link will expire in 15 minutes.\n\nWarm regards,\n%3\$s", 'forgehub-customer-portal' ),
             $user->display_name,
             $login_url,
             get_bloginfo( 'name' )
@@ -88,11 +88,12 @@ class WPFH_CP_Magic_Link {
      * Authenticate user from URL token.
      */
     public static function process_magic_link_auth() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the single-use emailed token is the credential; no session/nonce exists yet.
         if ( empty( $_GET['wpfh_magic_token'] ) ) {
             return;
         }
 
-        $token     = sanitize_text_field( wp_unslash( $_GET['wpfh_magic_token'] ) );
+        $token     = sanitize_text_field( wp_unslash( $_GET['wpfh_magic_token'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- see above.
         $token_key = 'wpfh_cp_magic_' . hash( 'sha256', $token );
         $user_id   = get_transient( $token_key );
 
@@ -101,6 +102,7 @@ class WPFH_CP_Magic_Link {
 
             wp_set_current_user( $user->ID );
             wp_set_auth_cookie( $user->ID, true );
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core hook, fired so other plugins see a normal login.
             do_action( 'wp_login', $user->user_login, $user );
 
             wp_safe_redirect( wc_get_page_permalink( 'myaccount' ) );

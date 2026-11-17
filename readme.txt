@@ -1,10 +1,10 @@
-=== Customer Portal ===
+=== ForgeHub Customer Portal ===
 Contributors: wpforgehub
-Tags: woocommerce, customer portal, downloads, digital products, magic link, passwordless, license manager
+Tags: woocommerce, customer portal, downloads, magic link, passwordless
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,10 @@ Transform WooCommerce's outdated default "My Account" area into a sleek, modern,
 
 == Changelog ==
 
+
+= 1.1.3 =
+* Rename: plugin is now "ForgeHub Customer Portal" (ForgeHub naming standard).
+* Fix: Plugins screen now shows a consistent "Settings" link.
 = 1.1.0 =
 * Feature (Pro): Priority Support Desk system with threaded replies, priority levels, and secure attachments.
 * Feature (Pro): Remote Domain License Delegation and 1-click seat revocation.

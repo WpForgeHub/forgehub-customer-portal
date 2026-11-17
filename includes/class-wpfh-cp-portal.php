@@ -21,6 +21,7 @@ class WPFH_CP_Portal {
 
         // Admin settings
         add_action( 'admin_menu', [ __CLASS__, 'register_admin_menu' ] );
+        add_filter( 'plugin_action_links_' . plugin_basename( WPFH_CP_FILE ), [ __CLASS__, 'add_action_links' ] );
         add_action( 'admin_init', [ __CLASS__, 'register_settings' ] );
 
         // Assets
@@ -94,7 +95,7 @@ class WPFH_CP_Portal {
             return;
         }
 
-        if ( is_user_logged_in() && ! isset( $_GET['noredirect'] ) ) {
+        if ( is_user_logged_in() && ! isset( $_GET['noredirect'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display flag.
             $downloads_url = add_query_arg( [
                 'order_completed' => absint( $order_id ),
                 'welcome'         => '1',
@@ -109,7 +110,7 @@ class WPFH_CP_Portal {
      * Welcome banner on /my-account/downloads/.
      */
     public static function render_welcome_download_banner() {
-        if ( isset( $_GET['welcome'] ) ) {
+        if ( isset( $_GET['welcome'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display flag.
             $settings = self::get_settings();
             ?>
             <div class="wpfh-cp-welcome-banner">
@@ -196,6 +197,18 @@ class WPFH_CP_Portal {
     /**
      * Admin Settings Page.
      */
+    /**
+     * Settings link on the Plugins screen.
+     *
+     * @param array $links Existing action links.
+     * @return array
+     */
+    public static function add_action_links( $links ) {
+        $settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=forgehub-customer-portal' ) ) . '">' . esc_html__( 'Settings', 'forgehub-customer-portal' ) . '</a>';
+        array_unshift( $links, $settings_link );
+        return $links;
+    }
+
     public static function register_admin_menu() {
         add_submenu_page(
             'woocommerce',
