@@ -45,12 +45,12 @@ class WPFH_CP_Domain_Licenses {
             return;
         }
 
-        $order_id = $order->get_id();
+        $order_id    = $order->get_id();
         $license_key = $order->get_meta( '_freemius_license_key' ) ?: $order->get_meta( '_wpfh_license_key' );
-        
-        // If license key not generated yet, provide mock for portal pro
+
+        // Only show Domain License Manager for orders that actually have a license key.
         if ( empty( $license_key ) ) {
-            $license_key = 'WPFH-' . strtoupper( substr( md5( 'order_' . $order_id ), 0, 16 ) );
+            return;
         }
 
         $domains = self::get_domains_for_order( $order_id );
@@ -219,11 +219,21 @@ class WPFH_CP_Domain_Licenses {
     public static function ajax_activate_domain() {
         check_ajax_referer( 'wpfh_cp_domain_nonce' );
 
-        $order_id = absint( $_POST['order_id'] ?? 0 );
-        $domain   = sanitize_text_field( $_POST['domain'] ?? '' );
-        $domain   = preg_replace( '#^https?://#', '', rtrim( $domain, '/' ) );
-        $order    = wc_get_order( $order_id );
+        if ( ! is_user_logged_in() ) {
+            wp_send_json_error( __( 'Authentication required.', 'forgehub-customer-portal' ) );
+        }
 
+        $order_id = absint( $_POST['order_id'] ?? 0 );
+        $raw      = isset( $_POST['domain'] ) ? sanitize_text_field( wp_unslash( $_POST['domain'] ) ) : '';
+        $domain   = strtolower( trim( preg_replace( '#^https?://#i', '', $raw ) ) );
+        $domain   = explode( '/', $domain )[0];
+        $domain   = preg_replace( '/:\d+$/', '', $domain );
+
+        if ( empty( $domain ) || ( 'localhost' !== $domain && ! preg_match( '/^[a-z0-9]([a-z0-9\-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]*[a-z0-9])?)+$/', $domain ) ) ) {
+            wp_send_json_error( __( 'Please enter a valid domain name (e.g. example.com).', 'forgehub-customer-portal' ) );
+        }
+
+        $order = wc_get_order( $order_id );
         if ( ! $order ) {
             wp_send_json_error( __( 'Order not found.', 'forgehub-customer-portal' ) );
         }
@@ -233,7 +243,19 @@ class WPFH_CP_Domain_Licenses {
             wp_send_json_error( __( 'Permission denied.', 'forgehub-customer-portal' ) );
         }
 
-        $domains = $order->get_meta( '_wpfh_activated_domains' ) ?: [];
+        $domains = $order->get_meta( '_wpfh_activated_domains' );
+        if ( ! is_array( $domains ) ) {
+            $domains = [];
+        }
+
+        // Prevent duplicate domain registrations.
+        foreach ( $domains as $existing ) {
+            $existing_name = is_array( $existing ) ? ( $existing['domain'] ?? '' ) : (string) $existing;
+            if ( strtolower( $existing_name ) === $domain ) {
+                wp_send_json_error( __( 'This domain is already registered on this license.', 'forgehub-customer-portal' ) );
+            }
+        }
+
         $max_activations = absint( $order->get_meta( '_wpfh_license_quota' ) ?: 5 );
 
         if ( count( $domains ) >= $max_activations ) {

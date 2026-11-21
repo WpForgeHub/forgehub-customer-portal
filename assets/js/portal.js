@@ -25,7 +25,7 @@
             $.post(wpfhCpData.ajax_url, {
                 action: 'wpfh_cp_send_magic_link',
                 email: email,
-                security: 'wpfh_cp_magic_nonce'
+                security: wpfhCpData.magic_nonce
             }, function(res) {
                 $btn.prop('disabled', false).text('Send Magic Link');
                 if (res && res.success) {

@@ -47,15 +47,37 @@ class WPFH_CP_Magic_Link {
     public static function ajax_send_magic_link() {
         check_ajax_referer( 'wpfh_cp_magic_nonce', 'security' );
 
+        $settings = WPFH_CP_Portal::get_settings();
+        if ( empty( $settings['enable_magic_link'] ) ) {
+            wp_send_json_error( [ 'message' => __( 'Magic link login is currently disabled.', 'forgehub-customer-portal' ) ] );
+        }
+
         $email = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         if ( ! is_email( $email ) ) {
             wp_send_json_error( [ 'message' => __( 'Please enter a valid email address.', 'forgehub-customer-portal' ) ] );
         }
 
+        // Rate limiting: per-IP (max 5 per 15 minutes) and per-email (60s cooldown).
+        $client_ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+        $ip_key    = 'wpfh_cp_ml_rl_ip_' . md5( $client_ip );
+        $ip_count  = (int) get_transient( $ip_key );
+        if ( $ip_count >= 5 ) {
+            wp_send_json_error( [ 'message' => __( 'Too many login link requests. Please wait a few minutes before trying again.', 'forgehub-customer-portal' ) ] );
+        }
+        set_transient( $ip_key, $ip_count + 1, 15 * MINUTE_IN_SECONDS );
+
+        $generic_success = __( 'If an account exists with this email address, a 1-click login link has been sent. Please check your inbox.', 'forgehub-customer-portal' );
+
+        $email_key = 'wpfh_cp_ml_rl_em_' . md5( strtolower( $email ) );
+        if ( get_transient( $email_key ) ) {
+            // Return identical message to prevent timing/enumeration leaks while suppressing duplicate emails.
+            wp_send_json_success( [ 'message' => $generic_success ] );
+        }
+        set_transient( $email_key, 1, MINUTE_IN_SECONDS );
+
         $user = get_user_by( 'email', $email );
         if ( ! $user ) {
-            // Security: Avoid email enumeration; return consistent success notification
-            wp_send_json_success( [ 'message' => __( 'If an account exists with this email address, an instant login link has been dispatched! Please check your inbox.', 'forgehub-customer-portal' ) ] );
+            wp_send_json_success( [ 'message' => $generic_success ] );
         }
 
         // Generate 24-byte cryptographic token
@@ -81,7 +103,7 @@ class WPFH_CP_Magic_Link {
 
         wp_mail( $email, $subject, $message, [ 'Content-Type: text/plain; charset=UTF-8' ] );
 
-        wp_send_json_success( [ 'message' => __( '✨ Instant magic link sent! Please check your email inbox to log in with 1 click.', 'forgehub-customer-portal' ) ] );
+        wp_send_json_success( [ 'message' => $generic_success ] );
     }
 
     /**

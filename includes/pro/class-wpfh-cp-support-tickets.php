@@ -99,10 +99,10 @@ class WPFH_CP_Support_Tickets {
         if ( isset( $_POST['wpfh_action'] ) && $_POST['wpfh_action'] === 'create_ticket' ) {
             check_admin_referer( 'wpfh_cp_create_ticket_action', 'wpfh_cp_nonce' );
 
-            $subject  = sanitize_text_field( $_POST['ticket_subject'] ?? '' );
-            $category = sanitize_text_field( $_POST['ticket_category'] ?? 'Support' );
-            $priority = sanitize_key( $_POST['ticket_priority'] ?? 'normal' );
-            $message  = wp_kses_post( $_POST['ticket_message'] ?? '' );
+            $subject  = sanitize_text_field( wp_unslash( $_POST['ticket_subject'] ?? '' ) );
+            $category = sanitize_text_field( wp_unslash( $_POST['ticket_category'] ?? 'Support' ) );
+            $priority = sanitize_key( wp_unslash( $_POST['ticket_priority'] ?? 'normal' ) );
+            $message  = wp_kses_post( wp_unslash( $_POST['ticket_message'] ?? '' ) );
 
             if ( empty( $subject ) || empty( $message ) ) {
                 wc_add_notice( __( 'Please provide both a subject and details for your ticket.', 'forgehub-customer-portal' ), 'error' );
@@ -128,6 +128,26 @@ class WPFH_CP_Support_Tickets {
                     self::handle_attachment_upload( $ticket_id, $_FILES['ticket_attachment'] );
                 }
 
+                // Notify store support email.
+                $settings      = WPFH_CP_Portal::get_settings();
+                $support_email = is_email( $settings['support_email'] ) ? $settings['support_email'] : get_option( 'admin_email' );
+                $current_user  = wp_get_current_user();
+                wp_mail(
+                    $support_email,
+                    /* translators: 1: Ticket ID, 2: Ticket subject */
+                    sprintf( __( '[Support Ticket #%1$d] %2$s', 'forgehub-customer-portal' ), $ticket_id, $subject ),
+                    sprintf(
+                        /* translators: 1: Customer name, 2: Customer email, 3: Category, 4: Priority, 5: Message */
+                        __( "New support ticket from %1\$s (%2\$s)\nProduct/Category: %3\$s\nPriority: %4\$s\n\n%5\$s", 'forgehub-customer-portal' ),
+                        $current_user->display_name,
+                        $current_user->user_email,
+                        $category,
+                        strtoupper( $priority ),
+                        wp_strip_all_tags( $message )
+                    ),
+                    [ 'Content-Type: text/plain; charset=UTF-8' ]
+                );
+
                 /* translators: %d: Support ticket ID number */
                 wc_add_notice( sprintf( __( 'Support ticket #%d created successfully! Our team will respond shortly.', 'forgehub-customer-portal' ), $ticket_id ), 'success' );
                 wp_safe_redirect( wc_get_endpoint_url( 'support-tickets', '', wc_get_page_permalink( 'myaccount' ) ) );
@@ -140,32 +160,60 @@ class WPFH_CP_Support_Tickets {
             check_admin_referer( 'wpfh_cp_reply_ticket_action', 'wpfh_cp_nonce' );
 
             $ticket_id = absint( $_POST['ticket_id'] ?? 0 );
-            $reply_msg = wp_kses_post( $_POST['reply_message'] ?? '' );
+            $reply_msg = wp_kses_post( wp_unslash( $_POST['reply_message'] ?? '' ) );
 
             $ticket = get_post( $ticket_id );
-            if ( ! $ticket || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
+            if ( ! $ticket || 'wpfh_ticket' !== $ticket->post_type || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
                 wc_add_notice( __( 'Unauthorized action.', 'forgehub-customer-portal' ), 'error' );
                 return;
             }
 
             if ( ! empty( $reply_msg ) ) {
+                $current_user = wp_get_current_user();
                 $comment_id = wp_insert_comment( [
                     'comment_post_ID'      => $ticket_id,
-                    'comment_author'       => wp_get_current_user()->display_name,
-                    'comment_author_email' => wp_get_current_user()->user_email,
+                    'comment_author'       => $current_user->display_name,
+                    'comment_author_email' => $current_user->user_email,
                     'comment_content'      => $reply_msg,
                     'comment_type'         => 'wpfh_ticket_reply',
                     'user_id'              => $user_id,
                     'comment_approved'     => 1,
                 ] );
 
-                // Update ticket status to open if customer replies
-                if ( ! current_user_can( 'manage_woocommerce' ) ) {
+                $is_staff = current_user_can( 'manage_woocommerce' ) && (int) $ticket->post_author !== $user_id;
+                if ( ! $is_staff ) {
                     update_post_meta( $ticket_id, '_wpfh_ticket_status', 'open' );
                 }
 
                 if ( ! empty( $_FILES['reply_attachment']['name'] ) ) {
                     self::handle_attachment_upload( $ticket_id, $_FILES['reply_attachment'] );
+                }
+
+                // Send reply notification email.
+                $settings = WPFH_CP_Portal::get_settings();
+                $recipient = '';
+                if ( $is_staff ) {
+                    $ticket_author = get_userdata( (int) $ticket->post_author );
+                    if ( $ticket_author && is_email( $ticket_author->user_email ) ) {
+                        $recipient = $ticket_author->user_email;
+                    }
+                } else {
+                    $recipient = is_email( $settings['support_email'] ) ? $settings['support_email'] : get_option( 'admin_email' );
+                }
+
+                if ( ! empty( $recipient ) ) {
+                    wp_mail(
+                        $recipient,
+                        /* translators: 1: Ticket ID, 2: Ticket title */
+                        sprintf( __( '[Reply on Ticket #%1$d] %2$s', 'forgehub-customer-portal' ), $ticket_id, $ticket->post_title ),
+                        sprintf(
+                            /* translators: 1: Author name, 2: Reply text */
+                            __( "New reply from %1\$s:\n\n%2\$s", 'forgehub-customer-portal' ),
+                            $current_user->display_name,
+                            wp_strip_all_tags( $reply_msg )
+                        ),
+                        [ 'Content-Type: text/plain; charset=UTF-8' ]
+                    );
                 }
 
                 wc_add_notice( __( 'Your reply has been posted.', 'forgehub-customer-portal' ), 'success' );
@@ -180,7 +228,7 @@ class WPFH_CP_Support_Tickets {
 
             $ticket_id = absint( $_POST['ticket_id'] ?? 0 );
             $ticket = get_post( $ticket_id );
-            if ( $ticket && ( (int) $ticket->post_author === $user_id || current_user_can( 'manage_woocommerce' ) ) ) {
+            if ( $ticket && 'wpfh_ticket' === $ticket->post_type && ( (int) $ticket->post_author === $user_id || current_user_can( 'manage_woocommerce' ) ) ) {
                 update_post_meta( $ticket_id, '_wpfh_ticket_status', 'resolved' );
                 /* translators: %d: Support ticket ID number */
                 wc_add_notice( sprintf( __( 'Ticket #%d has been marked as resolved.', 'forgehub-customer-portal' ), $ticket_id ), 'success' );
@@ -327,20 +375,27 @@ class WPFH_CP_Support_Tickets {
 
                 <div class="wpfh-cp-form-group" style="margin-bottom:16px;">
                     <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Subject / Issue Summary', 'forgehub-customer-portal' ); ?></label>
-                    <input type="text" name="ticket_subject" class="regular-text" style="width:100%; max-width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'e.g. Question regarding Smart Redirect regex rules', 'forgehub-customer-portal' ); ?>" />
+                    <input type="text" name="ticket_subject" class="regular-text" style="width:100%; max-width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;" required placeholder="<?php esc_attr_e( 'e.g. Question regarding product setup or licensing', 'forgehub-customer-portal' ); ?>" />
                 </div>
 
                 <div style="display:flex; gap:16px; margin-bottom:16px;">
                     <div style="flex:1;">
                         <label style="display:block; font-weight:600; color:#cbd5e1; margin-bottom:6px;"><?php esc_html_e( 'Product / Category', 'forgehub-customer-portal' ); ?></label>
                         <select name="ticket_category" style="width:100%; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px; border-radius:6px;">
-                            <option value="Customer Portal Pro">WPForgeHub Customer Portal</option>
-                            <option value="Frictionless Checkout Pro">WPForgeHub Frictionless Checkout</option>
-                            <option value="Freemius Bridge Pro">WPForgeHub Freemius Bridge</option>
-                            <option value="Image Memory Guard Pro">WPForgeHub Image Memory Guard</option>
-                            <option value="Smart Redirect Pro">WPForgeHub Smart Redirect</option>
-                            <option value="Billing & Licensing">Billing & Licensing</option>
-                            <option value="Custom Development">Custom Integration Inquiry</option>
+                            <?php
+                            $store_products = function_exists( 'wc_get_products' ) ? wc_get_products( [
+                                'status'  => 'publish',
+                                'limit'   => 50,
+                                'orderby' => 'title',
+                                'order'   => 'ASC',
+                            ] ) : [];
+                            foreach ( $store_products as $sp ) :
+                                $pname = $sp->get_name();
+                                ?>
+                                <option value="<?php echo esc_attr( $pname ); ?>"><?php echo esc_html( $pname ); ?></option>
+                            <?php endforeach; ?>
+                            <option value="Billing & Licensing"><?php esc_html_e( 'Billing & Licensing', 'forgehub-customer-portal' ); ?></option>
+                            <option value="General Support"><?php esc_html_e( 'General Support', 'forgehub-customer-portal' ); ?></option>
                         </select>
                     </div>
                     <div style="flex:1;">
@@ -373,7 +428,7 @@ class WPFH_CP_Support_Tickets {
 
     private static function render_single_ticket_thread( $ticket_id, $user_id ) {
         $ticket = get_post( $ticket_id );
-        if ( ! $ticket || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
+        if ( ! $ticket || 'wpfh_ticket' !== $ticket->post_type || ( (int) $ticket->post_author !== $user_id && ! current_user_can( 'manage_woocommerce' ) ) ) {
             echo '<div class="woocommerce-error">' . esc_html__( 'Ticket not found or access denied.', 'forgehub-customer-portal' ) . '</div>';
             return;
         }
@@ -417,7 +472,11 @@ class WPFH_CP_Support_Tickets {
             <!-- Original Message -->
             <div style="background:#1e293b; border-radius:8px; padding:18px; margin-bottom:20px; border-left:4px solid #3b82f6;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px; color:#94a3b8;">
-                    <strong><?php echo esc_html( get_userdata( $ticket->post_author )->display_name ); ?> (Customer)</strong>
+                    <?php
+                    $author_data = get_userdata( (int) $ticket->post_author );
+                    $author_name = $author_data ? $author_data->display_name : __( 'Deleted User', 'forgehub-customer-portal' );
+                    ?>
+                    <strong><?php echo esc_html( $author_name ); ?> (<?php esc_html_e( 'Customer', 'forgehub-customer-portal' ); ?>)</strong>
                     <span><?php echo esc_html( get_the_date( 'M j, Y \a\t g:i A', $ticket ) ); ?></span>
                 </div>
                 <div style="color:#e2e8f0; line-height:1.6;"><?php echo wp_kses_post( wpautop( $ticket->post_content ) ); ?></div>
