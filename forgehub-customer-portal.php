@@ -3,7 +3,7 @@
  * Plugin Name:       ForgeHub Customer Portal
  * Plugin URI:        https://wpforgehub.com/plugins/customer-portal/
  * Description:       Modern, high-performance customer dashboard for WooCommerce digital products. Features 1-click passwordless Magic Link login, clean Downloads (.zip) manager, license management, and instant post-checkout redirect.
- * Version:           1.1.3
+ * Version:           1.1.4
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            WPForgeHub
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'WPFH_CP_VERSION', '1.1.3' );
+define( 'WPFH_CP_VERSION', '1.1.4' );
 define( 'WPFH_CP_FILE', __FILE__ );
 define( 'WPFH_CP_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WPFH_CP_URL', plugin_dir_url( __FILE__ ) );
