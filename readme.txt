@@ -34,6 +34,10 @@ Transform WooCommerce's outdated default "My Account" area into a sleek, modern,
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Configure your preferences under **WooCommerce -> Customer Portal**.
 
+== Screenshots ==
+
+1. Customer Portal & Support Desk settings panel for self-service license keys, downloads, and magic-link login configuration.
+
 == Changelog ==
 
 = 1.1.5 =
