@@ -59,6 +59,14 @@
 
 ---
 
+## 📸 Admin Preview
+
+<p align="center">
+  <img src="assets/screenshot-1.png" alt="ForgeHub Customer Portal WordPress Admin Settings" width="100%" />
+</p>
+
+---
+
 ## 🛠️ Installation
 
 1. Upload the `forgehub-customer-portal` folder to `/wp-content/plugins/`.
@@ -72,6 +80,14 @@
 - Cryptographic 24-byte random tokens hashed via SHA-256 for magic links.
 - 15-minute transient expiry with instant one-time token invalidation.
 - Zero external dependencies and zero tracking overhead.
+
+---
+
+## 🔗 Links & Resources
+
+- **Plugin Page:** [https://wpforgehub.com/product/customer-portal/](https://wpforgehub.com/product/customer-portal/)
+- **Documentation & Help:** [wpforgehub.com/docs](https://wpforgehub.com/docs/)
+- **More Free WordPress Plugins:** [wpforgehub.com](https://wpforgehub.com/#products)
 
 ---
 
