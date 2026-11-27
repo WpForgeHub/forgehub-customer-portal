@@ -51,6 +51,8 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
                         ],
                     ],
                 ] );
+                // Freemius forbids uninstall.php in premium builds; use its after_uninstall hook there.
+                $wpfh_cp_fs->add_action( 'after_uninstall', 'wpfh_cp_uninstall_cleanup' );
             } else {
                 // Fallback object for Free / Filter-based Pro distribution
                 $wpfh_cp_fs = new class {
@@ -76,6 +78,17 @@ if ( ! function_exists( 'wpfh_cp_fs' ) ) {
     }
 
     wpfh_cp_fs();
+}
+
+/**
+ * Removes plugin options and transients (Freemius premium build; free build uses uninstall.php).
+ */
+function wpfh_cp_uninstall_cleanup() {
+    delete_option( 'wpfh_cp_settings' );
+
+    global $wpdb;
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall cleanup of transients.
+    $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_wpfh_cp_magic_%' OR option_name LIKE '_transient_timeout_wpfh_cp_magic_%' OR option_name LIKE '_transient_wpfh_cp_ml_rl_%' OR option_name LIKE '_transient_timeout_wpfh_cp_ml_rl_%'" );
 }
 
 /**
